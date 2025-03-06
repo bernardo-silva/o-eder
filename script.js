@@ -2,6 +2,10 @@ const setWeather = (city, min, max) => {
   document.getElementById("weather").textContent = "Estão entre " +
     min.toString() + " °C e " + max.toString() + " °C em " + city.toString();
 };
+const setWeatherFortaleza = () => {
+  document.getElementById("weather").textContent =
+    "Não sei, deve estar um calor desgraçado";
+};
 
 const populateCities = (options) => {
   const selectElement = document.getElementById("cities");
@@ -26,10 +30,14 @@ const fetchCities = async () => {
   citiesMap = Object.fromEntries(
     response["data"].map((c) => [c["local"], c["globalIdLocal"]]),
   );
-  populateCities(Object.keys(citiesMap));
+  populateCities([...Object.keys(citiesMap), "Fortaleza"]);
 };
 
 const fetchWeather = async (city) => {
+  if (city === "Fortaleza") {
+    setWeatherFortaleza();
+    return;
+  }
   const url =
     "https://api.ipma.pt/open-data/forecast/meteorology/cities/daily/" +
     citiesMap[city].toString() + ".json";
